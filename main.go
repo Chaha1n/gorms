@@ -26,13 +26,13 @@ func NewForms(targetUrl string) *Forms {
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 
 	c.Document = *doc
-	c.Questions = getQuestionSelections(c.Document)
+	c.Questions = findQuestions(c.Document)
 	return c
 }
 
-func getQuestionSelections(d goquery.Document) []Question {
+func findQuestions(d goquery.Document) []Question {
 	var result []Question
-	d.Find("office-form-question-content").Each(func(index int, s *goquery.Selection) {
+	d.Find("div.office-form-question-content").Each(func(index int, s *goquery.Selection) {
 		result = append(result, Question{
 			Title:     s.Find("question-title-box").Text(),
 			Selection: *s,
