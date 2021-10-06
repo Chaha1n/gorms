@@ -9,7 +9,11 @@ import (
 
 type Forms struct {
 	Document  goquery.Document
-	Questions []goquery.Selection
+	Questions []Question
+}
+type Question struct {
+	Title     string
+	Selection goquery.Selection
 }
 
 func NewForms(targetUrl string) *Forms {
@@ -26,10 +30,16 @@ func NewForms(targetUrl string) *Forms {
 	return c
 }
 
-func getQuestionSelections(d goquery.Document) []goquery.Selection {
-	var result []goquery.Selection
-	d.Find("text-format-content").Each(func(index int, s *goquery.Selection) {
-		result = append(result, *s)
+func getQuestionSelections(d goquery.Document) []Question {
+	var result []Question
+	d.Find("office-form-question-content").Each(func(index int, s *goquery.Selection) {
+		result = append(result, Question{
+			Title:     s.Find("question-title-box").Text(),
+			Selection: *s,
+		})
 	})
 	return result
+}
+func GetQuestionType(s goquery.Selection) {
+
 }
